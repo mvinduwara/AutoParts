@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react';
-import { getParts, Part } from './api/inventory.api';
-import './App.css';
+import { getParts } from './api/inventory.api';
+import { Table, Typography, Layout, theme } from 'antd';
+import type { Part } from './api/inventory.api';
+
+const { Header, Content } = Layout;
+const { Title } = Typography;
 
 function App() {
   const [parts, setParts] = useState<Part[]>([]);
   const [loading, setLoading] = useState(true);
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
 
   useEffect(() => {
     const fetchParts = async () => {
@@ -21,37 +28,49 @@ function App() {
     fetchParts();
   }, []);
 
+  // Ant Design Table Column Configuration
+  const columns = [
+    { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
+    { title: 'SKU', dataIndex: 'sku', key: 'sku' },
+    { title: 'Name', dataIndex: 'name', key: 'name' },
+    { title: 'Brand', dataIndex: 'brand', key: 'brand' },
+    { 
+      title: 'Selling Price', 
+      dataIndex: 'sellingPrice', 
+      key: 'sellingPrice',
+      render: (price: number) => `Rs. ${price.toFixed(2)}`
+    },
+  ];
+
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h2>AutoParts ERP - Inventory</h2>
-      
-      {loading ? (
-        <p>Loading parts from backend...</p>
-      ) : (
-        <table border={1} cellPadding={10} style={{ borderCollapse: 'collapse', width: '100%' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#f4f4f4', textAlign: 'left' }}>
-              <th>ID</th>
-              <th>SKU</th>
-              <th>Name</th>
-              <th>Brand</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {parts.map((part) => (
-              <tr key={part.id}>
-                <td>{part.id}</td>
-                <td>{part.sku}</td>
-                <td>{part.name}</td>
-                <td>{part.brand}</td>
-                <td>Rs. {part.sellingPrice.toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header style={{ display: 'flex', alignItems: 'center', background: '#001529' }}>
+        <Title level={3} style={{ color: 'white', margin: 0 }}>AutoParts ERP</Title>
+      </Header>
+      <Content style={{ padding: '0 48px', marginTop: '24px' }}>
+        <div style={{
+            background: colorBgContainer,
+            minHeight: 280,
+            padding: 24,
+            borderRadius: borderRadiusLG,
+            boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03)'
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+            <Title level={4} style={{ margin: 0 }}>Inventory Catalog</Title>
+          </div>
+          
+          <Table 
+            dataSource={parts} 
+            columns={columns} 
+            rowKey="id" 
+            loading={loading} 
+            bordered
+            pagination={{ pageSize: 10 }}
+          />
+        </div>
+      </Content>
+    </Layout>
   );
 }
 

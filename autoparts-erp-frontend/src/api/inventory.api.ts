@@ -1,5 +1,6 @@
 import { api } from './axiosInstance';
 
+// This is the export your App.tsx is looking for!
 export interface Part {
     id: number;
     sku: string;
