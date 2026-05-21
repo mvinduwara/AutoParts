@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: autoparts-erp-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/autoparts_erp
+    username: erp_user
+    password: secure_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Automatically creates/updates your database tables based on your Java Entities
+    show-sql: true # Prints the SQL queries to the console so you can see what Hibernate is doing under the hood
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
