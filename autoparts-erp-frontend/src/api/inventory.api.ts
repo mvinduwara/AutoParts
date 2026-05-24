@@ -1,8 +1,7 @@
 import { api } from './axiosInstance';
 
-// This is the export your App.tsx is looking for!
 export interface Part {
-    id: number;
+    id?: number; 
     sku: string;
     name: string;
     brand: string;
@@ -13,5 +12,10 @@ export interface Part {
 
 export const getParts = async (): Promise<Part[]> => {
     const response = await api.get('/inventory/parts');
+    return response.data;
+};
+
+export const createPart = async (partData: Part): Promise<Part> => {
+    const response = await api.post('/inventory/parts', partData);
     return response.data;
 };
